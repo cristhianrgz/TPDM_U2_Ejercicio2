@@ -7,6 +7,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ListView
+import androidx.appcompat.app.AlertDialog
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main2.*
+import java.sql.SQLException
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     var clave : EditText ?= null
     var listado : ListView ?= null
 
+    var basedatos = BaseDatos(this,"ejemplo2", null, 1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -32,5 +37,67 @@ class MainActivity : AppCompatActivity() {
             startActivity(ventanaInsert)
         }
 
+        actualizar?.setOnClickListener {
+
+        }
+
+        eliminar?.setOnClickListener {
+
+        }
+
+        buscar?.setOnClickListener {
+
+        }
+
     }
+
+    //FUNCIONES PARA BOTONES
+    fun buscar(id:String, btnEtiqueta: String){
+        try {
+            var transaccion = basedatos.readableDatabase
+            var SQL="SELECT *  FROM EVENTOS WHERE ID="+id
+
+            var  respuesta= transaccion.rawQuery(SQL,null)
+
+            if (respuesta.moveToFirst()==true){
+                var cadena = "NOMBRE: " + respuesta.getString(1)+"\nDOMICILIO: "+respuesta.getString(2)
+
+                //DEPENDIENDO EL BOTON PRESIONADO (BUSCAR, ELIMINAR O ACTUALIZAR) ES LA ACCION QUE REALIZARA
+                if (btnEtiqueta.startsWith("Buscar")) {
+                }
+
+                if (btnEtiqueta.startsWith("Eliminar")){
+                    var cadena = "SEGURO QUE DESEA ELIMINAR A [ "+respuesta.getString(1)+" ] CON ID [ "+respuesta.getString(0)+" ]"
+                    var alerta = AlertDialog.Builder(this)
+                    AlertDialog.Builder(this)
+                    alerta.setTitle("ATENCION").setMessage(cadena).setNeutralButton("NO"){dialog,which->
+                        return@setNeutralButton
+                    }.setPositiveButton("si"){dialog,which->
+                        //eliminar(id)
+                    }.show()
+                }
+
+                if(btnEtiqueta.startsWith("Actualizar")){
+                    editDescripcion?.setText(respuesta.getString(0))
+                    editFecha?.setText(respuesta.getString(1))
+                    editPrecio?.setText(respuesta.getString(2))
+                    actualizar?.setText("Aplicar cambios")
+                    insertar?.setEnabled(false)
+                    eliminar?.setEnabled(false)
+                    buscar?.setEnabled(false)
+                }
+            }else{
+                mensaje("ERROR","NO EXISTE EL ID")
+            }
+        }catch (err: SQLException){
+            mensaje("ERROR","NO SE PUDO ENCONTRAR EL REGISTRO")
+        }
+
+    }
+
+    //función para AlertDialogs
+    fun mensaje(titulo:String, mensaje:String){
+        AlertDialog.Builder(this).setTitle(titulo).setMessage(mensaje).setPositiveButton("Ok"){ dialog, which -> }.show()
+    }
+
 }
