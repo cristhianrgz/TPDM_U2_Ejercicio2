@@ -7,6 +7,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_main2.*
 import java.sql.SQLException
+import kotlin.random.Random
 
 class Main2Activity : AppCompatActivity() {
     var descripcion : EditText ?= null
@@ -23,7 +24,7 @@ class Main2Activity : AppCompatActivity() {
         descripcion = findViewById(R.id.editDescripcion)
         fecha = findViewById(R.id.editFecha)
         precio = findViewById(R.id.editPrecio)
-        insertar = findViewById(R.id.btnInsert)
+        insertar = findViewById(R.id.btnInsertMain2)
         regresar = findViewById(R.id.btnRegresar)
 
         insertar?.setOnClickListener {
@@ -39,7 +40,7 @@ class Main2Activity : AppCompatActivity() {
     fun insertar(){
         try {
             var transacion = basedatos.writableDatabase
-            var SQL = "INSERT INTO EVENTOS VALUES('DESCRIPCION', 'FECHA', 'PRECIO')"
+            var SQL = "INSERT INTO EVENTOS VALUES(NULL, 'DESCRIPCION', 'FECHA', 'PRECIO')"
 
             if(validarCampos() == false){
                 mensaje("ERROR", "AL PARECER HAY UN CAMPO DE TEXTO VACIO")
@@ -49,7 +50,6 @@ class Main2Activity : AppCompatActivity() {
             SQL = SQL.replace("DESCRIPCION",editDescripcion?.text.toString())
             SQL = SQL.replace("FECHA",editFecha?.text.toString())
             SQL = SQL.replace("PRECIO",editPrecio?.text.toString())
-
             transacion.execSQL(SQL)
             transacion.close()
             mensaje("EXITO", "SE INSERTO CORRECTAMENTE")

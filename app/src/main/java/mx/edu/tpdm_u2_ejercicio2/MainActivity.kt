@@ -38,7 +38,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         actualizar?.setOnClickListener {
-
+            val ventanaActualizar = Intent(this, Main3Activity::class.java)
+            startActivity(ventanaActualizar)
         }
 
         eliminar?.setOnClickListener {
@@ -60,10 +61,11 @@ class MainActivity : AppCompatActivity() {
             var  respuesta= transaccion.rawQuery(SQL,null)
 
             if (respuesta.moveToFirst()==true){
-                var cadena = "NOMBRE: " + respuesta.getString(1)+"\nDOMICILIO: "+respuesta.getString(2)
+                var cadena = "DESCRIPCION: " + respuesta.getString(1)+"\nFECHA: "+respuesta.getString(2)+"\nPRECIO "+respuesta.getString(3)
 
                 //DEPENDIENDO EL BOTON PRESIONADO (BUSCAR, ELIMINAR O ACTUALIZAR) ES LA ACCION QUE REALIZARA
                 if (btnEtiqueta.startsWith("Buscar")) {
+                    //ListView donde se colocan los registros.
                 }
 
                 if (btnEtiqueta.startsWith("Eliminar")){
